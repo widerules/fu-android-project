@@ -1,7 +1,4 @@
-This
-is
-a 
-text
-file
-!
-
+dit
+cu
+thang
+phu
