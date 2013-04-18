@@ -1,10 +1,6 @@
 package fu.powerprototype;
 
-import java.io.IOException;
-
-import org.anddev.andengine.audio.music.Music;
 import org.anddev.andengine.audio.music.MusicFactory;
-import org.anddev.andengine.audio.sound.Sound;
 import org.anddev.andengine.audio.sound.SoundFactory;
 import org.anddev.andengine.engine.Engine;
 import org.anddev.andengine.engine.camera.Camera;
@@ -23,7 +19,8 @@ import org.anddev.andengine.opengl.texture.TextureOptions;
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
 import org.anddev.andengine.opengl.texture.region.TextureRegionFactory;
 import org.anddev.andengine.ui.activity.BaseGameActivity;
-import org.anddev.andengine.util.Debug;
+
+import android.media.MediaPlayer;
 
 public class PowerPrototypeActivity extends BaseGameActivity {
 
@@ -41,8 +38,9 @@ public class PowerPrototypeActivity extends BaseGameActivity {
 	private TextureRegion mPlugTextureRegion;
 	private TextureRegion mShurikenTextureRegion;
 	
-	private Music mMusic;
-	private Sound mExplosionSound;
+	//sound of Duy
+	private MediaPlayer soundOnCollision;
+	private MediaPlayer backgroundMusic;
 	
 	@Override
 	public Engine onLoadEngine() {
@@ -62,29 +60,30 @@ public class PowerPrototypeActivity extends BaseGameActivity {
 		this.mBulbOffTextureRegion = TextureRegionFactory.createFromAsset(this.mTexture, this, "BulbOff.png", 128, 0);
 		this.mSocketTextureRegion = TextureRegionFactory.createFromAsset(this.mTexture2, this, "socket.png", 0, 0);
 		this.mPlugTextureRegion = TextureRegionFactory.createFromAsset(this.mTexture2, this, "plug.png", 128, 0);
-		this.mShurikenTextureRegion = TextureRegionFactory.createFromAsset(this.mTexture3, this, "shuriken.png",0,0);
-		
-		
-		MusicFactory.setAssetBasePath("mfx/");
-		SoundFactory.setAssetBasePath("mfx/");
-
+		this.mShurikenTextureRegion = TextureRegionFactory.createFromAsset(this.mTexture3, this, "shuriken.png",0,0);			
 		
 		this.mEngine.getTextureManager().loadTexture(this.mTexture);
 		this.mEngine.getTextureManager().loadTexture(this.mTexture2);
-		this.mEngine.getTextureManager().loadTexture(mTexture3);
+		this.mEngine.getTextureManager().loadTexture(mTexture3);				
 		
-		
-
-
+		soundOnCollision = MediaPlayer.create(this, R.raw.explosion);
+		backgroundMusic = MediaPlayer.create(this, R.raw.nhacnen);		
 	}
 
 	@Override
 	public Scene onLoadScene() {
+		Thread musicThread = new Thread(new Runnable() {
+	        public void run() {
+	            backgroundMusic.start();
+	        }
+	    });
+		musicThread.start();
+
+		
 		this.mEngine.registerUpdateHandler(new FPSLogger());
 		
 		final Scene scene = new Scene();
-		scene.setBackground(new ColorBackground(0.09804f, 0.6274f, 0.8784f));
-		
+		scene.setBackground(new ColorBackground(0.09804f, 0.6274f, 0.8784f));		
 		final Sprite bulbOn = new Sprite(0, 0, this.mBulbOnTextureRegion);
 		final Sprite bulbOff = new Sprite(0, 0, this.mBulbOffTextureRegion);
 		final Sprite shuriken = new Sprite(200,200, this.mShurikenTextureRegion);
@@ -128,7 +127,8 @@ public class PowerPrototypeActivity extends BaseGameActivity {
 				if(collidesWithCircle(plug,shuriken)) {
 					scene.setTouchAreaBindingEnabled(false);
 					plug.setPosition(0, 130);
-					
+										
+					soundOnCollision.start();
 				}
 				
 			}
