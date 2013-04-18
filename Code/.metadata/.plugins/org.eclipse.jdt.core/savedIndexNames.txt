@@ -1,0 +1,12 @@
+INDEX VERSION 1.126+F:\Damn IT\Android\SourceCode\Code\.metadata\.plugins\org.eclipse.jdt.core
+1648471765.index
+6443254.index
+2628775230.index
+1416793007.index
+2080702604.index
+3194621618.index
+1830124947.index
+1775347735.index
+1342707247.index
+2548294110.index
+3485719552.index
