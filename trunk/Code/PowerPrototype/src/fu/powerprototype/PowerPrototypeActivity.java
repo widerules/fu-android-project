@@ -93,6 +93,7 @@ public class PowerPrototypeActivity extends BaseGameActivity{
 		final Sprite shuriken = new Sprite(200,200, this.mShurikenTextureRegion);
 		final Sprite socket = new Sprite(CAMERA_WIDTH - 128, 130, this.mSocketTextureRegion);
 		final Sprite plug = new Sprite(0, 130, this.mPlugTextureRegion) {
+			@Override
 			public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
 				this.setPosition(pSceneTouchEvent.getX() - this.getWidth() / 2, 
 					pSceneTouchEvent.getY() - this.getHeight() / 2);
@@ -100,9 +101,16 @@ public class PowerPrototypeActivity extends BaseGameActivity{
 					this.setPosition(0, 130);
 				}
 				return true;
-			}
-			
+			}			
 		};				
+		
+//		final Sprite face = new Sprite(centerX, centerY, this.mFaceTextureRegion) {
+//			@Override
+//			public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
+//				this.setPosition(pSceneTouchEvent.getX() - this.getWidth() / 2, pSceneTouchEvent.getY() - this.getHeight() / 2);
+//				return true;
+//			}
+//		};
 		
 		final PhysicsHandler physicsHandler = new PhysicsHandler(plug);
 		plug.registerUpdateHandler(physicsHandler);
@@ -148,8 +156,12 @@ public class PowerPrototypeActivity extends BaseGameActivity{
 					plug.setPosition(0, 130);
 										
 					soundOnCollision.start();
-				}												
+					scene.setTouchAreaBindingEnabled(true);
+				}				
 				
+				if(!backgroundMusic.isPlaying()){
+					backgroundMusic.start();
+				}
 			}
 
 			@Override
