@@ -9,6 +9,11 @@ import org.anddev.andengine.engine.handler.physics.PhysicsHandler;
 import org.anddev.andengine.engine.options.EngineOptions;
 import org.anddev.andengine.engine.options.EngineOptions.ScreenOrientation;
 import org.anddev.andengine.engine.options.resolutionpolicy.RatioResolutionPolicy;
+import org.anddev.andengine.entity.IEntity;
+import org.anddev.andengine.entity.modifier.LoopEntityModifier;
+import org.anddev.andengine.entity.modifier.PathModifier;
+import org.anddev.andengine.entity.modifier.PathModifier.IPathModifierListener;
+import org.anddev.andengine.entity.modifier.PathModifier.Path;
 import org.anddev.andengine.entity.scene.Scene;
 import org.anddev.andengine.entity.scene.background.ColorBackground;
 import org.anddev.andengine.entity.sprite.Sprite;
@@ -19,6 +24,7 @@ import org.anddev.andengine.opengl.texture.TextureOptions;
 import org.anddev.andengine.opengl.texture.region.TextureRegion;
 import org.anddev.andengine.opengl.texture.region.TextureRegionFactory;
 import org.anddev.andengine.ui.activity.BaseGameActivity;
+import org.anddev.andengine.util.modifier.ease.EaseSineInOut;
 
 import android.media.MediaPlayer;
 
@@ -105,12 +111,25 @@ public class PowerPrototypeActivity extends BaseGameActivity{
 		scene.attachChild(bulbOff);
 		scene.attachChild(socket);
 		scene.attachChild(plug);
-		scene.attachChild(shuriken);
+		
 		
 		scene.registerTouchArea(plug);
 		scene.setTouchAreaBindingEnabled(true);
 		
+		//moving shuriken		
+		final Path shurikenPath = new Path(3).to(shuriken.getX(), shuriken.getY()).to(shuriken.getX(), shuriken.getY()-60).to(shuriken.getX(), shuriken.getY());
+		shuriken.registerEntityModifier(new LoopEntityModifier(new PathModifier(3, shurikenPath, null, new IPathModifierListener() {
+			
+			@Override
+			public void onWaypointPassed(PathModifier pPathModifier, IEntity pEntity,
+					int pWaypointIndex) {
+				// TODO Auto-generated method stub
+				
+			}
+		}, EaseSineInOut.getInstance())));		
+		scene.attachChild(shuriken);
 		musicThread.start();
+		
 		
 		scene.registerUpdateHandler(new IUpdateHandler() {
 
