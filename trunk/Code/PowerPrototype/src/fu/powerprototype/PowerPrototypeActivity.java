@@ -1,7 +1,7 @@
 package fu.powerprototype;
 
-import org.anddev.andengine.audio.music.MusicFactory;
-import org.anddev.andengine.audio.sound.SoundFactory;
+
+
 import org.anddev.andengine.engine.Engine;
 import org.anddev.andengine.engine.camera.Camera;
 import org.anddev.andengine.engine.handler.IUpdateHandler;
@@ -22,7 +22,7 @@ import org.anddev.andengine.ui.activity.BaseGameActivity;
 
 import android.media.MediaPlayer;
 
-public class PowerPrototypeActivity extends BaseGameActivity {
+public class PowerPrototypeActivity extends BaseGameActivity{
 
 	private Camera mCamera;
 	private Texture mTexture;
@@ -38,7 +38,7 @@ public class PowerPrototypeActivity extends BaseGameActivity {
 	private TextureRegion mPlugTextureRegion;
 	private TextureRegion mShurikenTextureRegion;
 	
-	//sound of Duy
+	//sound used in game
 	private MediaPlayer soundOnCollision;
 	private MediaPlayer backgroundMusic;
 	
@@ -76,9 +76,7 @@ public class PowerPrototypeActivity extends BaseGameActivity {
 	        public void run() {
 	            backgroundMusic.start();
 	        }
-	    });
-		musicThread.start();
-
+	    });		
 		
 		this.mEngine.registerUpdateHandler(new FPSLogger());
 		
@@ -98,7 +96,7 @@ public class PowerPrototypeActivity extends BaseGameActivity {
 				return true;
 			}
 			
-		};
+		};				
 		
 		final PhysicsHandler physicsHandler = new PhysicsHandler(plug);
 		plug.registerUpdateHandler(physicsHandler);
@@ -111,6 +109,8 @@ public class PowerPrototypeActivity extends BaseGameActivity {
 		
 		scene.registerTouchArea(plug);
 		scene.setTouchAreaBindingEnabled(true);
+		
+		musicThread.start();
 		
 		scene.registerUpdateHandler(new IUpdateHandler() {
 
@@ -129,7 +129,7 @@ public class PowerPrototypeActivity extends BaseGameActivity {
 					plug.setPosition(0, 130);
 										
 					soundOnCollision.start();
-				}
+				}												
 				
 			}
 
@@ -141,6 +141,23 @@ public class PowerPrototypeActivity extends BaseGameActivity {
 			
 		});
 		return scene;
+	}
+
+	@Override
+	public void onPause()
+	{
+	   super.onPause();	   
+	   this.finish();
+	}
+
+	@Override
+	public void onStop()
+	{
+		super.onStop();
+		if(backgroundMusic.isPlaying())
+			backgroundMusic.stop();
+		else
+			return;
 	}
 
 	@Override
@@ -162,6 +179,5 @@ public class PowerPrototypeActivity extends BaseGameActivity {
 	        return true;
 	    else return false;
 	}
-
 
 }
